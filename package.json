@@ -1,0 +1,29 @@
+{
+  "name": "healthprobe",
+  "version": "1.0.0",
+  "description": "Health Check Module For Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vedagarwal/healthprobe.git"
+  },
+  "keywords": [
+    "healthcheck",
+    "healthprobe"
+  ],
+  "author": "Ved Agarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vedagarwal/healthprobe/issues"
+  },
+  "homepage": "https://github.com/vedagarwal/healthprobe#readme",
+  "dependencies": {
+    "bluebird": "2.9.14",
+    "request-promise": "0.4.3",
+    "lodash": "3.10.1",
+    "node-schedule": "1.0.0"
+  }
+}
