@@ -82,13 +82,13 @@ healthprobe(configuration,interval,logger);
 }
 ```
 
- | Key | Description |
- | --- | ----------- |
- | serviceName | Name of the service, this would be retured as part of the response also |
- | type | REST/MONGO |
- | healthCheckURI | URL for getting the health check status of downstream services; to be used only for REST type |
- | connection | pass mongoose.connection object for getting health status of Mongo Connection |
- | testCollectionName | Mongo collection name for testing mongo connection. This could be any collection which has atleast one item/document |
+  | Key | Description |
+  | --- | ----------- |
+  | serviceName | Name of the service, this would be retured as part of the response also |
+  | type | REST or MONGO |
+  | healthCheckURI | URL for getting the health check status of downstream services, to be used only for REST type |
+  | connection | pass mongoose.connection object for getting health status of Mongo Connection |
+  | testCollectionName | Mongo collection name for testing mongo connection. This could be any collection which has atleast one item or document |
 
  ### Sample Response
  ```sh
