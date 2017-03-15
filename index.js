@@ -74,9 +74,9 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
             });
         }).catch(function (err) {
             if (logger) {
-                logger.err(err);
+                logger.error(err);
             } else {
-                console.err(err);
+                console.error(err);
             }
         });
     });
