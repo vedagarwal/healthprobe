@@ -21,9 +21,12 @@
   },
   "homepage": "https://github.com/vedagarwal/healthprobe#readme",
   "dependencies": {
-    "bluebird": "2.9.14",
-    "request-promise": "0.4.3",
-    "lodash": "3.10.1",
-    "node-schedule": "1.0.0"
+    "bluebird": "^2.9.14",
+    "request-promise": "^0.4.3",
+    "lodash": "^3.10.1",
+    "node-schedule": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=0.10.45"
   }
 }
