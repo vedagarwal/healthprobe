@@ -90,7 +90,8 @@ healthprobe(configuration,interval,logger);
   | connection | pass mongoose.connection object for getting health status of Mongo Connection |
   | testCollectionName | Mongo collection name for testing mongo connection. This could be any collection which has atleast one item or document |
 
- ### Sample Response
+ ## Sample Response
+
  ```sh
  HTTP STATUS CODE : 200 OK
  {
@@ -121,4 +122,4 @@ healthprobe(configuration,interval,logger);
     }
   ]
 }
- ```
+````
