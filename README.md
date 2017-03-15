@@ -50,11 +50,11 @@ var interval = 2;
 app.use('/healthcheck', healthprobe(configuration,interval));
 ```
 
-## Paramaters
+## Parameters
 ```sh
 healthprobe(configuration,interval,logger);
 ```
-| Paramater | Required | Description |
+| Parameter | Required | Description |
 | --------- | -------- | ----------- |
 | configuration | Yes | Array containing various services for which health has to be verified |
 | interval | Yes | Time interval between health probes in mins. The scheduler would make healthcheck on this interval |
