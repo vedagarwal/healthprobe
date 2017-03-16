@@ -103,7 +103,7 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
         });
     }, interval * 60 * 1000);
 
-    return function (req, res, next) {
+    return function (req, res) {
         if (healthStatus.status === 'AVAILABLE') {
             healthStatus.message = 'All the components are up and running - Uptime : ' + process.uptime() + ' sec';
             res.status(200).json(healthStatus);
@@ -111,7 +111,6 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
             healthStatus.message = 'One or more component(s) not available';
             res.status(503).json(healthStatus);
         }
-        next();
     };
 };
 
