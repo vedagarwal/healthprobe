@@ -22,8 +22,18 @@ function checkRestService(service) {
         response.serviceName = service.serviceName;
         return response;
     }).catch(function (err) {
-        err.response.body.serviceName = service.serviceName;
-        return err.response.body;
+        if(err.statusCode === 503){
+            err.response.body.serviceName = service.serviceName;
+            return err.response.body;
+        }else{
+            var serviceRes = {
+                status: UNAVAILABLE,
+                timestamp: new Date()
+            }
+            serviceRes.serviceName = service.serviceName;
+            return serviceRes;
+        }
+
     });
 }
 
@@ -87,7 +97,7 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
             var unavailable = _.some(results, function (result) {
                 return result.status === UNAVAILABLE;
             });
-            healthStatus.status = unavailable ? AVAILABLE : AVAILABLE;
+            healthStatus.status = unavailable ? UNAVAILABLE : AVAILABLE;
 
             if (logger) {
                 logger.info('Overall Component Health Status : ' + healthStatus.status);
@@ -111,6 +121,7 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
             healthStatus.message = 'One or more component(s) not available';
             res.status(503).json(healthStatus);
         }
+
     };
 };
 

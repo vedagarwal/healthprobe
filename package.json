@@ -1,6 +1,6 @@
 {
   "name": "healthprobe",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Health Check Module For Node",
   "main": "index.js",
   "scripts": {
