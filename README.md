@@ -9,8 +9,8 @@ The downstream REST services should return the health status in the given format
 ```sh
 HTTP STATUS CODE : 200 OK
 {
-"status" : "AVAILABLE",
-"timestamp" : "Wed Mar 15 08:44:37 GMT 2017"
+    "status" : "AVAILABLE",
+    "timestamp" : "Wed Mar 15 08:44:37 GMT 2017"
 }
 ```
 
@@ -18,8 +18,8 @@ HTTP STATUS CODE : 200 OK
 ```sh
 HTTP STATUS CODE : 503 Service Unavailable
 {
-"status" : "UNAVAILABLE",
-"timestamp" : "Wed Mar 15 08:44:37 GMT 2017"
+    "status" : "UNAVAILABLE",
+    "timestamp" : "Wed Mar 15 08:44:37 GMT 2017"
 }
 ```
 
@@ -35,13 +35,13 @@ var configuration = [
     type: 'REST',
     healthCheckURI: 'https://xyz.com/service/healthcheck',
     auth: 'Basic abcdef'
-  },
-  {
+},
+{
     serviceName: 'Rest Service 2',
     type: 'REST',
     healthCheckURI: 'https://def.com/service/healthcheck',
     auth: 'Basic abcdef'
-  }
+}
 ];
 
 //time interval between healthprobe in mins
@@ -89,44 +89,44 @@ healthprobe(configuration, interval, logger);
 }
 ```
 
-  | Key | Description |
-  | --- | ----------- |
-  | serviceName | Name of the service, this would be retured as part of the response also |
-  | type | REST or MONGO |
-  | healthCheckURI | URL for getting the health check status of downstream services. To be used only for REST type |
-  | dbConnection | The db object for getting health status of Mongo Connection. If using mongoose, pass mongoose.connection.db . To be used only for MONGO type |
+| Key | Description |
+| --- | ----------- |
+| serviceName | Name of the service, this would be retured as part of the response also |
+| type | REST or MONGO |
+| healthCheckURI | URL for getting the health check status of downstream services. To be used only for REST type |
+| dbConnection | The db object for getting health status of Mongo Connection. If using mongoose, pass mongoose.connection.db . To be used only for MONGO type |
 
- ## Sample Response
+## Sample Response
 
- ```sh
- HTTP STATUS CODE : 200 OK
- {
-  "status": "AVAILABLE",
-  "timestamp": "2017-03-15T09:22:13.526Z",
-  "message": "All the components are up and running - Uptime : 57 sec",
-  "services": [
+```sh
+HTTP STATUS CODE : 200 OK
+{
+    "status": "AVAILABLE",
+    "timestamp": "2017-03-15T09:22:13.526Z",
+    "message": "All the components are up and running - Uptime : 57 sec",
+    "services": [
     {
-      "service": "Rest Service 1",
-      "response": {
+        "service": "Rest Service 1",
+        "response": {
         "status": "AVAILABLE",
         "timestamp": "Wed Mar 15 09:22:58 GMT 2017"
-      }
+        }
     },
     {
-      "service": "Rest Service 2",
-      "response": {
-        "status": "AVAILABLE",
-        "timestamp": "Wed Mar 15 09:22:58 GMT 2017"
-      }
+    "service": "Rest Service 2",
+    "response": {
+    "status": "AVAILABLE",
+    "timestamp": "Wed Mar 15 09:22:58 GMT 2017"
+        }
     },
     {
-      "service": "MongoDB",
-      "response": {
-        "status": "AVAILABLE",
-        "timestamp": "2017-03-15T09:23:00.531Z"
-      }
+    "service": "MongoDB",
+    "response": {
+    "status": "AVAILABLE",
+    "timestamp": "2017-03-15T09:23:00.531Z"
+        }
     }
-  ]
+    ]
 }
 ````
 
@@ -134,7 +134,7 @@ healthprobe(configuration, interval, logger);
 
 The MIT License (MIT)
 
-Copyright (c) 2017 Ved Agarwal
+Copyright (c) 2015 Ved Agarwal
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
