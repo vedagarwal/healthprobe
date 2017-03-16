@@ -47,18 +47,18 @@ var configuration = [
 //time interval between healthprobe in mins
 var interval = 2;
 
-app.use('/healthcheck', healthprobe(configuration,interval));
+app.use('/healthcheck', healthprobe(configuration, interval));
 ```
 
 ## Parameters
 ```sh
-healthprobe(configuration,interval,logger);
+healthprobe(configuration, interval, logger);
 ```
 | Parameter | Required | Description |
 | --------- | -------- | ----------- |
-| configuration | Yes | Array containing various services for which health has to be verified |
-| interval | Yes | Time interval between health probes in mins. The scheduler would make healthcheck on this interval |
-| logger | No | Supply your custom logger for logging the health check probes to downstream services |
+| configuration | Yes | Array containing various services for which health has to be verified. |
+| interval | No | Time interval between health probes in mins. The scheduler would make healthcheck on this interval. Defaults to 5 minutes. |
+| logger | No | Supply your custom logger for logging the health check probes to downstream services. Defaults to console.log. |
 
 
 ## Configuration
@@ -77,8 +77,15 @@ healthprobe(configuration,interval,logger);
 {
     serviceName: 'MongoDB',
     type: 'MONGO',
-    connection: mongoose.connection,
-    testCollectionName: 'testcollection'
+    dbConnection: mongoose.connection.db
+}
+```
+-- MONGODB (Native)
+```sh
+{
+    serviceName: 'MongoDB',
+    type: 'MONGO',
+    dbConnection: db
 }
 ```
 
@@ -86,9 +93,8 @@ healthprobe(configuration,interval,logger);
   | --- | ----------- |
   | serviceName | Name of the service, this would be retured as part of the response also |
   | type | REST or MONGO |
-  | healthCheckURI | URL for getting the health check status of downstream services, to be used only for REST type |
-  | connection | pass mongoose.connection object for getting health status of Mongo Connection |
-  | testCollectionName | Mongo collection name for testing mongo connection. This could be any collection which has atleast one item or document |
+  | healthCheckURI | URL for getting the health check status of downstream services. To be used only for REST type |
+  | connection | The db object for getting health status of Mongo Connection. If using mongoose, pass mongoose.connection.db . To be used only for MONGO type |
 
  ## Sample Response
 
@@ -123,4 +129,3 @@ healthprobe(configuration,interval,logger);
   ]
 }
 ````
-
