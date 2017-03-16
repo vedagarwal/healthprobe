@@ -94,7 +94,7 @@ healthprobe(configuration, interval, logger);
   | serviceName | Name of the service, this would be retured as part of the response also |
   | type | REST or MONGO |
   | healthCheckURI | URL for getting the health check status of downstream services. To be used only for REST type |
-  | connection | The db object for getting health status of Mongo Connection. If using mongoose, pass mongoose.connection.db . To be used only for MONGO type |
+  | dbConnection | The db object for getting health status of Mongo Connection. If using mongoose, pass mongoose.connection.db . To be used only for MONGO type |
 
  ## Sample Response
 
