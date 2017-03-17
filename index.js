@@ -2,9 +2,18 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var BPromise = require('bluebird');
 var schedule = require('node-schedule');
+var assert = require('assert');
 
-const UNAVAILABLE = 'UNAVAILABLE';
-const AVAILABLE = 'AVAILABLE';
+const Status = {
+    UNAVAILABLE: 'UNAVAILABLE',
+    AVAILABLE: 'AVAILABLE'
+};
+
+const Type = {
+    REST: 'REST',
+    MONGO: 'MONGO'
+};
+
 
 function checkRestService(service) {
     var options = {
@@ -14,26 +23,28 @@ function checkRestService(service) {
         json: true,
         uri: service.healthCheckURI,
         method: 'GET',
-        headers: {
-            'Authorization': service.auth
-        }
+        headers: {}
+
     };
+    if (service.auth) {
+        options.headers['Authorization'] = service.auth;
+    }
+
     return rp(options).then(function (response) {
         response.serviceName = service.serviceName;
         return response;
     }).catch(function (err) {
-        if(err.statusCode === 503){
+        if (err.statusCode === 503) {
             err.response.body.serviceName = service.serviceName;
             return err.response.body;
-        }else{
+        } else {
             var serviceRes = {
-                status: UNAVAILABLE,
+                status: Status.UNAVAILABLE,
                 timestamp: new Date()
-            }
+            };
             serviceRes.serviceName = service.serviceName;
             return serviceRes;
         }
-
     });
 }
 
@@ -47,9 +58,9 @@ function checkMongo(service) {
         var collection = service.dbConnection.collection('system.js');
         collection.findOne({}, function (error) {
             if (error) {
-                resp.status = UNAVAILABLE;
+                resp.status = Status.UNAVAILABLE;
             } else {
-                resp.status = AVAILABLE;
+                resp.status = Status.AVAILABLE;
             }
             resolve(resp);
         });
@@ -64,10 +75,27 @@ function checkMongo(service) {
  * @returns {Function} The handler that can be mounted at a suitable route.
  */
 module.exports = function checkHealth(configuration, intervalInMin, logger) {
-    var services = configuration || [];
+    // Input validation
+    assert(configuration !== undefined, 'Invalid input: configuration is a required parameter');
+    var restServicesValid = _.chain(configuration)
+        .filter(function (service) {
+            return service.type === Type.REST;
+        })
+        .every(function (service) {
+            return !!service.healthCheckURI;
+        });
+    var mongoServicesValid = _.chain(configuration)
+        .filter(function (service) {
+            return service.type === Type.MONGO;
+        })
+        .every(function (service) {
+            return !!service.dbConnection;
+        });
+    assert(restServicesValid && mongoServicesValid, 'Invalid input: configuration is not in expected format');
+
     var interval = intervalInMin || 5;
     var healthStatus = {
-        status: 'AVAILABLE',
+        status: Status.AVAILABLE,
         timestamp: new Date(),
         message: '',
         services: []
@@ -76,9 +104,9 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
     setInterval(function () {
         BPromise.map(services, function (service) {
             switch (service.type) {
-                case 'REST':
+                case Type.REST:
                     return checkRestService(service);
-                case 'MONGO':
+                case Type.MONGO:
                     return checkMongo(service);
                 default:
                     throw new Error('Service Type Not Supported');
@@ -95,9 +123,9 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
             });
 
             var unavailable = _.some(results, function (result) {
-                return result.status === UNAVAILABLE;
+                return result.status === Status.UNAVAILABLE;
             });
-            healthStatus.status = unavailable ? UNAVAILABLE : AVAILABLE;
+            healthStatus.status = unavailable ? Status.UNAVAILABLE : Status.AVAILABLE;
 
             if (logger) {
                 logger.info('Overall Component Health Status : ' + healthStatus.status);
@@ -114,7 +142,7 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
     }, interval * 60 * 1000);
 
     return function (req, res) {
-        if (healthStatus.status === 'AVAILABLE') {
+        if (healthStatus.status === Status.AVAILABLE) {
             healthStatus.message = 'All the components are up and running - Uptime : ' + process.uptime() + ' sec';
             res.status(200).json(healthStatus);
         } else {
