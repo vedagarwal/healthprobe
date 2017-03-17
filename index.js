@@ -144,22 +144,32 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
     });
   assert(restServicesValid && mongoServicesValid, 'Invalid input: configuration is not in expected format');
 
+  var systemHealth = {
+    status: Status.AVAILABLE,
+    timestamp: new Date(),
+    message: '',
+    services: []
+  };
+
   var interval = intervalInMin || 5;
-  var healthStatus = getHealth(services, logger);
-
-  setInterval(function () {
-    healthStatus = getHealth(services, logger);
-  }, interval * 60 * 1000);
-
+  getHealth(configuration, logger)
+    .then(function (healthStatus) {
+      systemHealth = healthStatus;
+      setInterval(function () {
+        return getHealth(configuration, logger)
+          .then(function (healthStatus) {
+            systemHealth = healthStatus;
+          });
+      }, interval * 60 * 1000);
+    });
   return function (req, res) {
-    if (healthStatus.status === Status.AVAILABLE) {
-      healthStatus.message = 'All the components are up and running - Uptime : ' + process.uptime() + ' sec';
-      res.status(200).json(healthStatus);
+    if (systemHealth.status === Status.AVAILABLE) {
+      systemHealth.message = 'All the components are up and running - Uptime : ' + process.uptime() + ' sec';
+      res.status(200).json(systemHealth);
     } else {
-      healthStatus.message = 'One or more component(s) not available';
-      res.status(503).json(healthStatus);
+      systemHealth.message = 'One or more component(s) not available';
+      res.status(503).json(systemHealth);
     }
-
   };
 };
 
