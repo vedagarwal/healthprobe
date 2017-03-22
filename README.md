@@ -44,8 +44,8 @@ var configuration = [
 }
 ];
 
-//time interval between healthprobe in mins
-var interval = 2;
+//time interval between healthprobe in seconds
+var interval = 10;
 
 app.use('/healthcheck', healthprobe(configuration, interval));
 ```
@@ -57,7 +57,7 @@ healthprobe(configuration, interval, logger);
 | Parameter | Required | Description |
 | --------- | -------- | ----------- |
 | configuration | Yes | Array containing various services for which health has to be verified. |
-| interval | No | Time interval between health probes in mins. The scheduler would make healthcheck on this interval. Defaults to 5 minutes. |
+| interval | No | Time interval between health probes in seconds. The scheduler would make healthcheck on this interval. Defaults to 30 seconds. |
 | logger | No | Supply your custom logger for logging the health check probes to downstream services. Defaults to console.log. |
 
 
