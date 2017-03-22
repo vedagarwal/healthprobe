@@ -152,16 +152,13 @@ module.exports = function checkHealth(configuration, intervalInMin, logger) {
   };
 
   var interval = intervalInMin || 5;
-  getHealth(configuration, logger)
-    .then(function (healthStatus) {
-      systemHealth = healthStatus;
-      setInterval(function () {
-        return getHealth(configuration, logger)
-          .then(function (healthStatus) {
-            systemHealth = healthStatus;
-          });
-      }, interval * 60 * 1000);
-    });
+  setInterval(function () {
+    return getHealth(configuration, logger)
+      .then(function (healthStatus) {
+        systemHealth = healthStatus;
+      });
+  }, interval * 60 * 1000);
+
   return function (req, res) {
     if (systemHealth.status === Status.AVAILABLE) {
       systemHealth.message = 'All the components are up and running - Uptime : ' + process.uptime() + ' sec';
